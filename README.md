@@ -102,8 +102,54 @@ zerotier-sdk/
 ├── zerotier.go      # 统一接口
 ├── client/          # 本地 Service API
 ├── central/         # 云端 Central API
+├── mcp/             # MCP 服务集成
+├── cmd/mcp/         # MCP 服务入口
 └── example/         # 使用示例
 ```
+
+## MCP 集成
+
+支持与 Claude、Cursor 等 AI 工具集成：
+详见 [mcp/README.md](mcp/README.md)
+
+```go
+package main
+
+import (
+	"log"
+	"os"
+
+	"github.com/fromsko/zerotier-sdk"
+	ztmcp "github.com/fromsko/zerotier-sdk/mcp"
+)
+
+func main() {
+	// 从环境变量获取 Central API Token
+	token := os.Getenv("ZT_CENTRAL_TOKEN")
+	// 云端连接
+	localClientToken := os.Getenv("ZT_LOCAL_TOKEN")
+	// 如果需要采用密钥形式连接
+	localClient := zerotier.NewClient(
+		zerotier.WithClientBaseURL("http://localhost:9993"),
+		zerotier.WithClientToken(localClientToken),
+	)
+
+	var opts []ztmcp.Option
+	if token != "" {
+		opts = append(opts, ztmcp.WithCentralToken(token), ztmcp.WithLocalClient(localClient))
+	}
+
+	// 创建 MCP 服务
+	s := ztmcp.New("zerotier", "1.0.0", opts...)
+
+	// 启动 stdio 服务
+	if err := s.ServeStdio(); err != nil {
+		log.Fatalf("Server error: %v", err)
+	}
+}
+```
+
+![Mcp-tool-client](./docs/mcp-client-info.png)
 
 ## License
 
