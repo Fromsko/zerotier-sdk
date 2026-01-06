@@ -4,6 +4,7 @@ package mcp
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/fromsko/zerotier-sdk/central"
 	"github.com/fromsko/zerotier-sdk/client"
@@ -194,6 +195,46 @@ func (s *Server) registerCentralTools() {
 		),
 		s.handleCentralDeauthorize,
 	)
+
+	// 设置成员昵称
+	s.mcpServer.AddTool(
+		mcp.NewTool("zt_central_set_name",
+			mcp.WithDescription("设置成员昵称"),
+			mcp.WithString("network_id",
+				mcp.Required(),
+				mcp.Description("网络 ID"),
+			),
+			mcp.WithString("member_id",
+				mcp.Required(),
+				mcp.Description("成员 ID"),
+			),
+			mcp.WithString("name",
+				mcp.Required(),
+				mcp.Description("新昵称"),
+			),
+		),
+		s.handleCentralSetName,
+	)
+
+	// 设置成员 IP
+	s.mcpServer.AddTool(
+		mcp.NewTool("zt_central_set_ip",
+			mcp.WithDescription("设置成员 IP 地址"),
+			mcp.WithString("network_id",
+				mcp.Required(),
+				mcp.Description("网络 ID"),
+			),
+			mcp.WithString("member_id",
+				mcp.Required(),
+				mcp.Description("成员 ID"),
+			),
+			mcp.WithString("ip",
+				mcp.Required(),
+				mcp.Description("IP 地址（多个用逗号分隔）"),
+			),
+		),
+		s.handleCentralSetIP,
+	)
 }
 
 // ============================================
@@ -376,4 +417,58 @@ func (s *Server) handleCentralDeauthorize(ctx context.Context, req mcp.CallToolR
 	}
 
 	return mcp.NewToolResultText(fmt.Sprintf("已取消授权: %s (%s)", member.NodeID, member.Name)), nil
+}
+
+func (s *Server) handleCentralSetName(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	networkID, err := req.RequireString("network_id")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	memberID, err := req.RequireString("member_id")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	name, err := req.RequireString("name")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	member, err := s.centralClient.Networks().Members(networkID).SetName(memberID, name)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("设置昵称失败: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf("已设置昵称: %s -> %s", member.NodeID, member.Name)), nil
+}
+
+func (s *Server) handleCentralSetIP(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	networkID, err := req.RequireString("network_id")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	memberID, err := req.RequireString("member_id")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	ipStr, err := req.RequireString("ip")
+	if err != nil {
+		return mcp.NewToolResultError(err.Error()), nil
+	}
+
+	// 解析 IP 列表（支持逗号分隔）
+	ips := strings.Split(ipStr, ",")
+	for i := range ips {
+		ips[i] = strings.TrimSpace(ips[i])
+	}
+
+	member, err := s.centralClient.Networks().Members(networkID).SetIPAssignments(memberID, ips)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("设置 IP 失败: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf("已设置 IP: %s -> %v", member.NodeID, member.Config.IPAssignments)), nil
 }

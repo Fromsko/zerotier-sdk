@@ -20,6 +20,12 @@ type MemberService interface {
 	Deauthorize(memberID string) (*Member, error)
 	// Delete 删除成员
 	Delete(memberID string) error
+	// SetName 设置成员昵称
+	SetName(memberID string, name string) (*Member, error)
+	// SetDescription 设置成员描述
+	SetDescription(memberID string, description string) (*Member, error)
+	// SetIPAssignments 设置成员 IP 地址
+	SetIPAssignments(memberID string, ips []string) (*Member, error)
 }
 
 type memberService struct {
@@ -101,4 +107,27 @@ func (s *memberService) Deauthorize(memberID string) (*Member, error) {
 func (s *memberService) Delete(memberID string) error {
 	_, err := s.client.do(http.MethodDelete, s.basePath()+"/"+memberID, nil)
 	return err
+}
+
+// SetName 设置成员昵称
+func (s *memberService) SetName(memberID string, name string) (*Member, error) {
+	return s.Update(memberID, &UpdateMemberRequest{
+		Name: name,
+	})
+}
+
+// SetDescription 设置成员描述
+func (s *memberService) SetDescription(memberID string, description string) (*Member, error) {
+	return s.Update(memberID, &UpdateMemberRequest{
+		Description: description,
+	})
+}
+
+// SetIPAssignments 设置成员 IP 地址
+func (s *memberService) SetIPAssignments(memberID string, ips []string) (*Member, error) {
+	return s.Update(memberID, &UpdateMemberRequest{
+		Config: &UpdateMemberConfig{
+			IPAssignments: ips,
+		},
+	})
 }

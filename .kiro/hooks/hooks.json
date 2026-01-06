@@ -1,0 +1,86 @@
+{
+  "hooks": [
+    {
+      "id": "go-format-on-save",
+      "name": "Go 代码格式化",
+      "description": "保存 Go 文件时自动格式化代码",
+      "trigger": {
+        "type": "onFileSave",
+        "pattern": "**/*.go"
+      },
+      "action": {
+        "type": "command",
+        "command": "gofmt -w ${file}"
+      },
+      "enabled": true
+    },
+    {
+      "id": "run-tests-on-save",
+      "name": "保存时运行测试",
+      "description": "保存测试文件时自动运行相关测试",
+      "trigger": {
+        "type": "onFileSave",
+        "pattern": "**/*_test.go"
+      },
+      "action": {
+        "type": "command",
+        "command": "go test -v -run . ${fileDir}"
+      },
+      "enabled": false
+    },
+    {
+      "id": "lint-check",
+      "name": "代码检查",
+      "description": "手动触发代码质量检查",
+      "trigger": {
+        "type": "manual"
+      },
+      "action": {
+        "type": "command",
+        "command": "golangci-lint run ./..."
+      },
+      "enabled": true
+    },
+    {
+      "id": "build-mcp",
+      "name": "构建 MCP",
+      "description": "手动触发 MCP 二进制构建",
+      "trigger": {
+        "type": "manual"
+      },
+      "action": {
+        "type": "command",
+        "command": "go build -o dist/zerotier-mcp ./cmd/mcp"
+      },
+      "enabled": true
+    },
+    {
+      "id": "update-readme",
+      "name": "更新文档提醒",
+      "description": "修改 API 时提醒更新文档",
+      "trigger": {
+        "type": "onFileSave",
+        "pattern": "**/client/*.go,**/central/*.go"
+      },
+      "action": {
+        "type": "agent",
+        "message": "检查是否需要更新对应模块的 README.md 文档，确保 API 文档与代码同步"
+      },
+      "enabled": false
+    },
+    {
+      "id": "mcp-tool-check",
+      "name": "MCP 工具检查",
+      "description": "修改 MCP 服务时检查工具定义",
+      "trigger": {
+        "type": "onFileSave",
+        "pattern": "**/mcp/**/*.go"
+      },
+      "action": {
+        "type": "agent",
+        "message": "检查 MCP 工具定义是否完整，包括工具描述、参数定义和错误处理"
+      },
+      "enabled": false
+    }
+  ]
+}
