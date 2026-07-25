@@ -89,25 +89,32 @@ s := mcp.New("zerotier", "1.1.0",
 
 ### 云端 API（Central v1，需配置 ZT_CENTRAL_TOKEN）
 
-| 工具                          | 描述               |
-| ----------------------------- | ------------------ |
-| `zt_central_networks`         | 列出云端网络       |
-| `zt_central_network_info`     | 网络详情           |
-| `zt_central_create_network`   | 创建网络           |
-| `zt_central_update_network`   | 更新网络           |
-| `zt_central_delete_network`   | 删除网络           |
-| `zt_central_members`          | 列出网络成员       |
-| `zt_central_member_info`      | 成员详情           |
-| `zt_central_authorize`        | 授权成员           |
-| `zt_central_deauthorize`      | 取消授权           |
-| `zt_central_authorize_with_ip`| 授权并设置 IP/名称 |
-| `zt_central_set_name`         | 设置成员名称       |
-| `zt_central_set_ip`           | 设置成员 IP        |
-| `zt_central_delete_member`    | 删除成员           |
-| `zt_central_organization`     | 组织信息           |
-| `zt_central_invitations`      | 邀请列表           |
-| `zt_central_users`            | 用户列表           |
-| `zt_central_tokens`           | Token 列表         |
+| 工具                                          | 描述                      |
+| --------------------------------------------- | ------------------------- |
+| `zt_central_networks`                         | 列出云端网络              |
+| `zt_central_network_info`                     | 网络详情                  |
+| `zt_central_create_network`                   | 创建网络                  |
+| `zt_central_update_network`                   | 更新网络                  |
+| `zt_central_delete_network`                   | 删除网络                  |
+| `zt_central_members`                          | 列出网络成员              |
+| `zt_central_member_info`                      | 成员详情                  |
+| `zt_central_authorize`                        | 授权成员                  |
+| `zt_central_deauthorize`                      | 取消授权                  |
+| `zt_central_authorize_with_ip`                | 授权并设置 IP/名称        |
+| `zt_central_set_name`                         | 设置成员名称              |
+| `zt_central_set_ip`                           | 设置成员 IP               |
+| `zt_central_delete_member`                    | 删除成员                  |
+| `zt_central_organization`                     | 组织信息（当前组织）      |
+| `zt_central_organization_members`             | 组织成员列表（需 org_id） |
+| `zt_central_invitations`                      | 邀请列表                  |
+| `zt_central_create_invitation`                | 创建邀请                  |
+| `zt_central_accept_invitation`                | 接受邀请                  |
+| `zt_central_decline_invitation`               | 拒绝邀请                  |
+| `zt_central_user`                             | 用户信息（需 user_id）    |
+| `zt_central_random_token`                     | 获取随机 Token            |
+| `zt_central_create_token`                     | 创建用户 Token            |
+| `zt_central_delete_token`                     | 删除用户 Token            |
+| `zt_central_set_network_user_permissions`     | 设置网络用户权限          |
 
 ### Central V2 工具（需配置 ZT_CENTRAL_V2_TOKEN）
 

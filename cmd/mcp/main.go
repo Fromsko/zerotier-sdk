@@ -36,7 +36,7 @@ func main() {
 	}
 
 	// 创建 MCP 服务
-	s := ztmcp.New("zerotier", "1.0.0", opts...)
+	s := ztmcp.New("zerotier", "1.1.0", opts...)
 
 	// 启动 stdio 服务
 	if err := s.ServeStdio(); err != nil {
