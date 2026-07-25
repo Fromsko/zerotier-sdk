@@ -111,6 +111,7 @@ func (s *Server) registerTools() {
 	if s.centralClient != nil {
 		s.registerCentralTools()
 		s.registerCentralExtraTools()
+		s.registerBatchTools()
 	}
 
 	// Central V2 API 工具
