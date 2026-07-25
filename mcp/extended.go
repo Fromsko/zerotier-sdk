@@ -283,7 +283,7 @@ func parseIPList(s string) []string {
 func (s *Server) handleNetworkInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	network, err := s.localClient.Networks().Get(networkID)
@@ -296,7 +296,7 @@ func (s *Server) handleNetworkInfo(ctx context.Context, req mcp.CallToolRequest)
 func (s *Server) handleUpdateNetwork(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	dns := req.GetBool("allow_dns", false)
@@ -321,7 +321,7 @@ func (s *Server) handleUpdateNetwork(ctx context.Context, req mcp.CallToolReques
 func (s *Server) handlePeerInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	peerID, err := req.RequireString("peer_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	peer, err := s.localClient.Peers().Get(peerID)
@@ -342,7 +342,7 @@ func (s *Server) handleControllerNetworks(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleControllerNetworkInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	network, err := s.localClient.Controller().GetNetwork(networkID)
@@ -355,7 +355,7 @@ func (s *Server) handleControllerNetworkInfo(ctx context.Context, req mcp.CallTo
 func (s *Server) handleControllerMembers(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	members, err := s.localClient.Controller().ListMembers(networkID)
@@ -368,11 +368,11 @@ func (s *Server) handleControllerMembers(ctx context.Context, req mcp.CallToolRe
 func (s *Server) handleControllerMemberInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	memberID, err := req.RequireString("member_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	member, err := s.localClient.Controller().GetMember(networkID, memberID)
@@ -389,7 +389,7 @@ func (s *Server) handleControllerMemberInfo(ctx context.Context, req mcp.CallToo
 func (s *Server) handleCentralNetworkInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	network, err := s.centralClient.Networks().Get(networkID)
@@ -402,7 +402,7 @@ func (s *Server) handleCentralNetworkInfo(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleCentralCreateNetwork(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	name, err := req.RequireString("name")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	cfg := zerotier.NewCentralNetworkConfig().Name(name)
@@ -428,7 +428,7 @@ func (s *Server) handleCentralCreateNetwork(ctx context.Context, req mcp.CallToo
 func (s *Server) handleCentralUpdateNetwork(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	cfg := zerotier.NewCentralNetworkConfig()
@@ -452,7 +452,7 @@ func (s *Server) handleCentralUpdateNetwork(ctx context.Context, req mcp.CallToo
 func (s *Server) handleCentralDeleteNetwork(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	if err := s.centralClient.Networks().Delete(networkID); err != nil {
@@ -464,11 +464,11 @@ func (s *Server) handleCentralDeleteNetwork(ctx context.Context, req mcp.CallToo
 func (s *Server) handleCentralMemberInfo(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	memberID, err := req.RequireString("member_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	member, err := s.centralClient.Networks().Members(networkID).Get(memberID)
@@ -481,11 +481,11 @@ func (s *Server) handleCentralMemberInfo(ctx context.Context, req mcp.CallToolRe
 func (s *Server) handleCentralDeleteMember(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	memberID, err := req.RequireString("member_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	if err := s.centralClient.Networks().Members(networkID).Delete(memberID); err != nil {
@@ -498,15 +498,15 @@ func (s *Server) handleCentralDeleteMember(ctx context.Context, req mcp.CallTool
 func (s *Server) handleCentralAuthorizeWithIP(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	memberID, err := req.RequireString("member_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	ipStr, err := req.RequireString("ip")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	svc := s.centralClient.Networks().Members(networkID)
@@ -533,7 +533,7 @@ func (s *Server) handleCentralInvitations(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleCentralCreateInvitation(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	email, err := req.RequireString("email")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	inviteReq := &zerotier.OrganizationInvitation{Email: email}
@@ -551,7 +551,7 @@ func (s *Server) handleCentralCreateInvitation(ctx context.Context, req mcp.Call
 func (s *Server) handleCentralAcceptInvitation(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	inviteID, err := req.RequireString("invite_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	invite, err := s.centralClient.Invitations().Accept(inviteID)
@@ -564,7 +564,7 @@ func (s *Server) handleCentralAcceptInvitation(ctx context.Context, req mcp.Call
 func (s *Server) handleCentralDeclineInvitation(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	inviteID, err := req.RequireString("invite_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	if err := s.centralClient.Invitations().Decline(inviteID); err != nil {
@@ -591,7 +591,7 @@ func (s *Server) handleCentralOrganization(ctx context.Context, req mcp.CallTool
 func (s *Server) handleCentralOrganizationMembers(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	orgID, err := req.RequireString("org_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	members, err := s.centralClient.Organization().Members(orgID)
@@ -604,7 +604,7 @@ func (s *Server) handleCentralOrganizationMembers(ctx context.Context, req mcp.C
 func (s *Server) handleCentralUser(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	userID, err := req.RequireString("user_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	user, err := s.centralClient.Users().Get(userID)
@@ -625,15 +625,15 @@ func (s *Server) handleCentralRandomToken(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleCentralCreateToken(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	userID, err := req.RequireString("user_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	tokenName, err := req.RequireString("token_name")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	tokenValue, err := req.RequireString("token_value")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	token, err := s.centralClient.Users().AddToken(userID, &zerotier.APIToken{
@@ -649,11 +649,11 @@ func (s *Server) handleCentralCreateToken(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleCentralDeleteToken(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	userID, err := req.RequireString("user_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	tokenName, err := req.RequireString("token_name")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	if err := s.centralClient.Users().DeleteToken(userID, tokenName); err != nil {
@@ -665,11 +665,11 @@ func (s *Server) handleCentralDeleteToken(ctx context.Context, req mcp.CallToolR
 func (s *Server) handleCentralSetNetworkUserPermissions(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 	userID, err := req.RequireString("user_id")
 	if err != nil {
-		return errorResult(err.Error()), nil
+		return errorResult("%s", err.Error()), nil
 	}
 
 	permission := &zerotier.NetworkUserPermissions{

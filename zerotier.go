@@ -1,8 +1,10 @@
 // Package zerotier 提供 ZeroTier API 的 Go SDK
 //
-// 本 SDK 包含两个子模块：
+// 本 SDK 包含三个子模块：
 //   - client: 本地 Service API（localhost:9993）
-//   - central: 云端 Central API（api.zerotier.com）
+//   - central: 云端 Central API（api.zerotier.com / api/v1）
+//   - central/v2: 新版 Central API（central.zerotier.com / api/v2）
+//   - mcp: MCP 服务集成（stdio）
 //
 // 快速开始：
 //
@@ -10,13 +12,20 @@
 //	local := zerotier.NewClient()
 //	status, _ := local.Status()
 //
-//	// 云端管理
+//	// 云端管理（v1）
 //	cloud := zerotier.NewCentral("your_api_token")
 //	networks, _ := cloud.Networks().List()
+//
+//	// 云端管理（v2）
+//	cloudV2, _ := zerotier.NewCentralV2("your_service_account_key")
+//	resp, _ := cloudV2.ListNetworksWithResponse(context.Background(), nil)
 package zerotier
 
 import (
+	"net/http"
+
 	"github.com/fromsko/zerotier-sdk/central"
+	centralv2 "github.com/fromsko/zerotier-sdk/central/v2"
 	"github.com/fromsko/zerotier-sdk/client"
 )
 
@@ -217,6 +226,37 @@ func WithClientTokenFile(path string) ClientOption {
 // WithCentralBaseURL 设置云端 API 地址
 func WithCentralBaseURL(url string) CentralOption {
 	return central.WithBaseURL(url)
+}
+
+// ============================================
+// Central V2 相关类型
+// ============================================
+
+type (
+	// CentralV2 Central API V2 客户端
+	CentralV2 = centralv2.ClientWithResponses
+
+	// CentralV2Option Central V2 客户端配置选项
+	CentralV2Option = centralv2.ClientOption
+)
+
+// NewCentralV2 创建 Central API V2 客户端
+//
+// token 为 Central Service Account API Key，使用 Bearer 方式认证
+//
+//	centralV2, _ := zerotier.NewCentralV2("your_service_account_key")
+func NewCentralV2(token string, opts ...CentralV2Option) (*CentralV2, error) {
+	return centralv2.NewClientWithToken(token, opts...)
+}
+
+// WithCentralV2BaseURL 设置 Central V2 API 地址
+func WithCentralV2BaseURL(url string) CentralV2Option {
+	return centralv2.WithBaseURL(url)
+}
+
+// WithCentralV2HTTPClient 设置 Central V2 HTTP 客户端
+func WithCentralV2HTTPClient(hc *http.Client) CentralV2Option {
+	return centralv2.WithHTTPClient(hc)
 }
 
 // ============================================
