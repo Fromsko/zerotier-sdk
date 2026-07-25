@@ -84,10 +84,12 @@ func (s *Server) MCPServer() *server.MCPServer {
 func (s *Server) registerTools() {
 	// 本地 API 工具
 	s.registerLocalTools()
+	s.registerLocalExtraTools()
 
 	// 云端 API 工具（如果配置了）
 	if s.centralClient != nil {
 		s.registerCentralTools()
+		s.registerCentralExtraTools()
 	}
 }
 

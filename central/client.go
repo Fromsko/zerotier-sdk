@@ -16,6 +16,14 @@ type Client interface {
 	Status() (*CentralStatus, error)
 	// Networks 网络管理
 	Networks() NetworkService
+	// Organization 组织管理
+	Organization() OrganizationService
+	// Invitations 组织邀请管理
+	Invitations() InvitationService
+	// Users 用户管理
+	Users() UserService
+	// RandomToken 获取服务器随机 Token
+	RandomToken() (*RandomToken, error)
 }
 
 // client 客户端实现
@@ -121,4 +129,34 @@ func (c *client) Status() (*CentralStatus, error) {
 // Networks 返回网络服务
 func (c *client) Networks() NetworkService {
 	return &networkService{client: c}
+}
+
+// Organization 返回组织服务
+func (c *client) Organization() OrganizationService {
+	return &organizationService{client: c}
+}
+
+// Invitations 返回邀请服务
+func (c *client) Invitations() InvitationService {
+	return &invitationService{client: c}
+}
+
+// Users 返回用户服务
+func (c *client) Users() UserService {
+	return &userService{client: c}
+}
+
+// RandomToken 返回随机 Token
+func (c *client) RandomToken() (*RandomToken, error) {
+	data, err := c.do(http.MethodGet, "/randomToken", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var token RandomToken
+	if err := json.Unmarshal(data, &token); err != nil {
+		return nil, err
+	}
+
+	return &token, nil
 }

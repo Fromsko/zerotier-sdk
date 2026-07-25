@@ -83,6 +83,9 @@ type (
 	// StatusUser 状态中的用户信息
 	StatusUser = central.StatusUser
 
+	// User 云端用户信息
+	User = central.User
+
 	// Network 云端网络信息
 	Network = central.Network
 
@@ -112,6 +115,57 @@ type (
 
 	// DNS 配置
 	DNS = central.DNS
+
+	// Organization 组织信息
+	Organization = central.Organization
+
+	// OrganizationMember 组织成员
+	OrganizationMember = central.OrganizationMember
+
+	// OrganizationInvitation 组织邀请
+	OrganizationInvitation = central.OrganizationInvitation
+
+	// InviteStatus 邀请状态
+	InviteStatus = central.InviteStatus
+
+	// APIToken API Token
+	APIToken = central.APIToken
+
+	// RandomToken 随机 Token
+	RandomToken = central.RandomToken
+
+	// NetworkUserPermissions 网络用户权限
+	NetworkUserPermissions = central.NetworkUserPermissions
+
+	// Permissions 通用权限
+	Permissions = central.Permissions
+
+	// PermissionsMap 权限映射
+	PermissionsMap = central.PermissionsMap
+
+	// AuthMethods 认证方式
+	AuthMethods = central.AuthMethods
+
+	// OrgSSOConfig 组织 SSO 配置
+	OrgSSOConfig = central.OrgSSOConfig
+
+	// NetworkSSOConfig 网络 SSO 配置
+	NetworkSSOConfig = central.NetworkSSOConfig
+
+	// SsoIssuer SSO Issuer 配置
+	SsoIssuer = central.SsoIssuer
+
+	// OrganizationService 组织服务接口
+	OrganizationService = central.OrganizationService
+
+	// InvitationService 邀请服务接口
+	InvitationService = central.InvitationService
+
+	// UserService 用户服务接口
+	UserService = central.UserService
+
+	// NetworkPermissionService 网络权限服务接口
+	NetworkPermissionService = central.NetworkPermissionService
 )
 
 // ============================================

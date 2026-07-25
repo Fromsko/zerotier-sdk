@@ -23,14 +23,14 @@ type StatusUser struct {
 
 // User 用户信息（完整）
 type User struct {
-	ID                string            `json:"id"`
-	OrgID             string            `json:"orgId"`
-	GlobalPermissions map[string]bool   `json:"globalPermissions"`
-	DisplayName       string            `json:"displayName"`
-	Email             string            `json:"email"`
-	Auth              map[string]string `json:"auth,omitempty"`
-	SMSNumber         string            `json:"smsNumber,omitempty"`
-	Tokens            []string          `json:"tokens,omitempty"`
+	ID                string       `json:"id"`
+	OrgID             string       `json:"orgId"`
+	GlobalPermissions *Permissions `json:"globalPermissions,omitempty"`
+	DisplayName       string       `json:"displayName"`
+	Email             string       `json:"email"`
+	Auth              *AuthMethods `json:"auth,omitempty"`
+	SMSNumber         string       `json:"smsNumber,omitempty"`
+	Tokens            []string     `json:"tokens,omitempty"`
 }
 
 // Network 网络信息
@@ -88,6 +88,109 @@ type AssignMode struct {
 type DNS struct {
 	Domain  string   `json:"domain"`
 	Servers []string `json:"servers"`
+}
+
+// Permissions 通用权限对象
+type Permissions struct {
+	Authorize bool `json:"a"`
+	Delete    bool `json:"d"`
+	Modify    bool `json:"m"`
+	Read      bool `json:"r"`
+}
+
+// PermissionsMap 用户 ID 到权限的映射
+type PermissionsMap map[string]*Permissions
+
+// AuthMethods 认证方式信息
+type AuthMethods struct {
+	Local  string `json:"local,omitempty"`
+	OIDC   string `json:"oidc,omitempty"`
+	Google string `json:"google,omitempty"`
+}
+
+// APIToken API Token 信息
+type APIToken struct {
+	TokenName string `json:"tokenName"`
+	Token     string `json:"token,omitempty"`
+}
+
+// RandomToken 随机生成的 Token
+type RandomToken struct {
+	Clock int64  `json:"clock"`
+	Hex   string `json:"hex"`
+	Token string `json:"token"`
+}
+
+// NetworkUserPermissions 网络用户权限（用于设置特定用户的权限）
+type NetworkUserPermissions struct {
+	ID        string `json:"id"`
+	Read      bool   `json:"r"`
+	Authorize bool   `json:"a"`
+	Modify    bool   `json:"m"`
+	Delete    bool   `json:"d"`
+}
+
+// InviteStatus 邀请状态
+type InviteStatus string
+
+// 邀请状态常量
+const (
+	InvitePending  InviteStatus = "pending"
+	InviteAccepted InviteStatus = "accepted"
+	InviteCanceled InviteStatus = "canceled"
+)
+
+// OrganizationInvitation 组织邀请
+type OrganizationInvitation struct {
+	OrgID        string       `json:"orgId,omitempty"`
+	Email        string       `json:"email"`
+	ID           string       `json:"id,omitempty"`
+	CreationTime int64        `json:"creation_time,omitempty"`
+	Status       InviteStatus `json:"status,omitempty"`
+	UpdateTime   int64        `json:"update_time,omitempty"`
+	OwnerEmail   string       `json:"ownerEmail,omitempty"`
+}
+
+// OrganizationMember 组织成员
+type OrganizationMember struct {
+	OrgID  string `json:"orgId,omitempty"`
+	UserID string `json:"userId"`
+	Name   string `json:"name,omitempty"`
+	Email  string `json:"email,omitempty"`
+}
+
+// Organization 组织信息
+type Organization struct {
+	ID         string                `json:"id"`
+	OwnerID    string                `json:"ownerId"`
+	OwnerEmail string                `json:"ownerEmail"`
+	Members    []*OrganizationMember `json:"members,omitempty"`
+	SSOConfig  *OrgSSOConfig         `json:"ssoConfig,omitempty"`
+}
+
+// SsoIssuer SSO Issuer 配置
+type SsoIssuer struct {
+	Provider              string `json:"provider"`
+	ClientID              string `json:"clientId"`
+	Issuer                string `json:"issuer"`
+	AuthorizationEndpoint string `json:"authorization_endpoint,omitempty"`
+}
+
+// OrgSSOConfig 组织 SSO 配置
+type OrgSSOConfig struct {
+	Enabled bool         `json:"enabled"`
+	Issuers []*SsoIssuer `json:"issuers,omitempty"`
+}
+
+// NetworkSSOConfig 网络 SSO 配置
+type NetworkSSOConfig struct {
+	Enabled               bool     `json:"enabled"`
+	Mode                  string   `json:"mode"`
+	ClientID              string   `json:"clientId"`
+	Issuer                string   `json:"issuer,omitempty"`
+	Provider              string   `json:"provider,omitempty"`
+	AuthorizationEndpoint string   `json:"authorizationEndpoint,omitempty"`
+	AllowList             []string `json:"allowList,omitempty"`
 }
 
 // Member 网络成员

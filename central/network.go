@@ -20,6 +20,8 @@ type NetworkService interface {
 	Delete(networkID string) error
 	// Members 获取成员服务
 	Members(networkID string) MemberService
+	// Permissions 获取网络用户权限服务
+	Permissions(networkID string) NetworkPermissionService
 }
 
 type networkService struct {
@@ -107,4 +109,9 @@ func (s *networkService) Delete(networkID string) error {
 // Members 获取成员服务
 func (s *networkService) Members(networkID string) MemberService {
 	return &memberService{client: s.client, networkID: networkID}
+}
+
+// Permissions 获取网络用户权限服务
+func (s *networkService) Permissions(networkID string) NetworkPermissionService {
+	return &networkPermissionService{client: s.client, networkID: networkID}
 }
