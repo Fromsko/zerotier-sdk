@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/fromsko/zerotier-sdk/central"
+	centralv2 "github.com/fromsko/zerotier-sdk/central/v2"
 	"github.com/fromsko/zerotier-sdk/client"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -14,9 +15,10 @@ import (
 
 // Server ZeroTier MCP 服务
 type Server struct {
-	mcpServer     *server.MCPServer
-	localClient   client.Client
-	centralClient central.Client
+	mcpServer       *server.MCPServer
+	localClient     client.Client
+	centralClient   central.Client
+	centralV2Client *centralv2.ClientWithResponses
 }
 
 // Option 服务配置选项
@@ -33,6 +35,25 @@ func WithLocalClient(c client.Client) Option {
 func WithCentralClient(c central.Client) Option {
 	return func(s *Server) {
 		s.centralClient = c
+	}
+}
+
+// WithCentralV2Client 设置 Central V2 客户端
+func WithCentralV2Client(c *centralv2.ClientWithResponses) Option {
+	return func(s *Server) {
+		s.centralV2Client = c
+	}
+}
+
+// WithCentralV2Token 使用 Token 创建 Central V2 客户端
+func WithCentralV2Token(token string) Option {
+	return func(s *Server) {
+		c, err := centralv2.NewClientWithToken(token)
+		if err != nil {
+			// 这里不 panic，让后续调用时返回错误
+			return
+		}
+		s.centralV2Client = c
 	}
 }
 
@@ -90,6 +111,11 @@ func (s *Server) registerTools() {
 	if s.centralClient != nil {
 		s.registerCentralTools()
 		s.registerCentralExtraTools()
+	}
+
+	// Central V2 API 工具
+	if s.centralV2Client != nil {
+		s.registerCentralV2Tools()
 	}
 }
 

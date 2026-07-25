@@ -130,13 +130,14 @@ func (s *Server) registerCentralExtraTools() {
 		s.handleCentralDeleteMember,
 	)
 
-	// 特殊业务工具：授权并分配 IP
+	// 特殊业务工具：授权并分配 IP（兼容旧版参数 ip_address + name）
 	s.mcpServer.AddTool(
 		mcp.NewTool("zt_central_authorize_with_ip",
-			mcp.WithDescription("授权成员并分配固定 IP"),
+			mcp.WithDescription("授权成员并分配自定义 IP 地址"),
 			mcp.WithString("network_id", mcp.Required(), mcp.Description("网络 ID")),
 			mcp.WithString("member_id", mcp.Required(), mcp.Description("成员 ID")),
-			mcp.WithString("ip", mcp.Required(), mcp.Description("IP 地址（多个用逗号分隔）")),
+			mcp.WithString("ip_address", mcp.Required(), mcp.Description("IP 地址（单个或多个用逗号分隔）")),
+			mcp.WithString("name", mcp.Description("成员名称（可选）")),
 		),
 		s.handleCentralAuthorizeWithIP,
 	)
@@ -494,7 +495,7 @@ func (s *Server) handleCentralDeleteMember(ctx context.Context, req mcp.CallTool
 	return textResult("已删除成员: %s", memberID), nil
 }
 
-// handleCentralAuthorizeWithIP 是业务组合工具：先授权，再分配 IP
+// handleCentralAuthorizeWithIP 是业务组合工具：先授权，再分配 IP，并可设置名称
 func (s *Server) handleCentralAuthorizeWithIP(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	networkID, err := req.RequireString("network_id")
 	if err != nil {
@@ -504,20 +505,25 @@ func (s *Server) handleCentralAuthorizeWithIP(ctx context.Context, req mcp.CallT
 	if err != nil {
 		return errorResult("%s", err.Error()), nil
 	}
-	ipStr, err := req.RequireString("ip")
+	ipStr, err := req.RequireString("ip_address")
 	if err != nil {
 		return errorResult("%s", err.Error()), nil
 	}
 
-	svc := s.centralClient.Networks().Members(networkID)
-
-	if _, err := svc.Authorize(memberID); err != nil {
-		return errorResult("授权失败: %v", err), nil
+	authorized := true
+	updateReq := &zerotier.UpdateMemberRequest{
+		Config: &zerotier.UpdateMemberConfig{
+			Authorized:    &authorized,
+			IPAssignments: parseIPList(ipStr),
+		},
+	}
+	if name := req.GetString("name", ""); name != "" {
+		updateReq.Name = name
 	}
 
-	member, err := svc.SetIPAssignments(memberID, parseIPList(ipStr))
+	member, err := s.centralClient.Networks().Members(networkID).Update(memberID, updateReq)
 	if err != nil {
-		return errorResult("分配 IP 失败: %v", err), nil
+		return errorResult("授权并分配 IP 失败: %v", err), nil
 	}
 	return jsonResult(member)
 }

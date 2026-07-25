@@ -30,6 +30,11 @@ func main() {
 		opts = append(opts, ztmcp.WithCentralToken(token))
 	}
 
+	// Central V2 连接
+	if v2Token := os.Getenv("ZT_CENTRAL_V2_TOKEN"); v2Token != "" {
+		opts = append(opts, ztmcp.WithCentralV2Token(v2Token))
+	}
+
 	// 创建 MCP 服务
 	s := ztmcp.New("zerotier", "1.0.0", opts...)
 

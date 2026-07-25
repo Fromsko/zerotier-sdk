@@ -113,6 +113,9 @@ type (
 	// UpdateMemberRequest 更新成员请求
 	UpdateMemberRequest = central.UpdateMemberRequest
 
+	// UpdateMemberConfig 更新成员配置
+	UpdateMemberConfig = central.UpdateMemberConfig
+
 	// Route 路由配置
 	Route = central.Route
 
