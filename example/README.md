@@ -9,7 +9,9 @@ example/
 ├── main.go          # 统一接口示例
 ├── client/          # 本地 Service API 示例
 │   └── main.go
-└── central/         # 云端 Central API 示例
+├── central/         # 云端 Central API v1 示例
+│   └── main.go
+└── central_v2/      # 云端 Central API v2 示例（可选）
     └── main.go
 ```
 

@@ -6,12 +6,13 @@
 
 ## 核心模块
 
-| 模块          | 用途             | 地址             |
-| ------------- | ---------------- | ---------------- |
-| `client/`     | 本地 Service API | localhost:9993   |
-| `central/`    | 云端 Central API | api.zerotier.com |
-| `mcp/`        | MCP 服务集成     | stdio            |
-| `zerotier.go` | 统一入口         | -                |
+| 模块          | 用途                  | 地址                      |
+| ------------- | --------------------- | ------------------------- |
+| `client/`     | 本地 Service API      | localhost:9993            |
+| `central/`    | 云端 Central API v1   | api.zerotier.com          |
+| `central/v2/` | 云端 Central API v2   | central.zerotier.com      |
+| `mcp/`        | MCP 服务集成          | stdio                     |
+| `zerotier.go` | 统一入口              | -                         |
 
 ## 代码规范
 
